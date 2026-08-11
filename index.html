@@ -402,6 +402,11 @@
   .btn-estorno{ margin-left:8px; padding:4px 10px; font-size:11px; border-radius:7px; border:1px solid var(--ember); background:transparent; color:#e8b3b3; cursor:pointer; white-space:nowrap; }
   .btn-estorno:hover{ background:rgba(122,46,46,.2); }
   .tag-cancelada{ margin-left:8px; padding:3px 9px; font-size:10px; font-weight:700; letter-spacing:.05em; border-radius:6px; background:rgba(122,46,46,.25); color:#e8b3b3; white-space:nowrap; }
+  #app-screen.modo-caixa{ grid-template-columns: 1fr; }
+  .modo-caixa .sidebar{ display:none; }
+  .modo-caixa .menu-toggle{ display:none !important; }
+  .kiosk-sair{ display:none; }
+  .modo-caixa .kiosk-sair{ display:inline-flex; }
 </style>
 </head>
 <body>
@@ -510,7 +515,10 @@
           <p id="screenSubtitle">Visão geral do Mercado — hoje</p>
         </div>
       </div>
-      <div class="date-badge" id="dateBadge">—</div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="date-badge" id="dateBadge">—</div>
+        <button class="logout-btn kiosk-sair" id="kioskLogout" style="margin:0; max-width:120px;">Sair</button>
+      </div>
     </div>
 
     <!-- ===== TELA: DASHBOARD ===== -->
@@ -1237,6 +1245,7 @@
     iniciarListenerClientes();
     exibirTelefoneSuporteRodape(situacao);
     exibirAvisoVencimentoProximo(role, situacao);
+    document.getElementById('app-screen').classList.toggle('modo-caixa', role === 'Atendente');
     goToScreen(role === 'Atendente' ? 'comanda' : 'dashboard');
   }
 
@@ -1339,7 +1348,7 @@
   // ---------- Role-based sidebar (Módulo 2: Dashboard, Produtos e Comanda funcionais) ----------
   const PERMISSIONS = {
     Administrador: ['dashboard','comanda','produtos','caixa','estoque','relatorios','config'],
-    Atendente: ['comanda','caixa'] // atendente só abre/finaliza comanda e fecha o caixa do dia
+    Atendente: ['comanda'] // terminal de caixa travado: só o PDV, sem acesso a mais nada
   };
   const BUILT_MODULES = ['dashboard','produtos','comanda','caixa','estoque','relatorios','config']; // já implementados
   const SCREEN_SUBTITLES = {
@@ -1390,13 +1399,16 @@
     });
   });
 
-  document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  function fazerLogout(){
     document.getElementById('app-screen').style.display = 'none';
+    document.getElementById('app-screen').classList.remove('modo-caixa');
     document.getElementById('login-screen').style.display = 'grid';
     document.getElementById('userInput').value = '';
     document.getElementById('passInput').value = '';
     if(unsubProdutos) unsubProdutos();
-  });
+  }
+  document.getElementById('logoutBtn').addEventListener('click', fazerLogout);
+  document.getElementById('kioskLogout').addEventListener('click', fazerLogout);
 
   // mobile sidebar toggle
   const sidebar = document.getElementById('sidebar');
