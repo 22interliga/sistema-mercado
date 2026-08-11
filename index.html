@@ -1837,11 +1837,10 @@
   });
 
   function pedirLiberacaoCancelamento(){
-    if(cancelamentoLiberado) return true;
-    const senha = prompt('Senha de liberação para cancelar/remover item (produto errado ou devolução parcial):');
+    const senha = prompt('Senha de liberação para cancelar/remover item (produto errado ou devolução):');
     if(senha === null) return false;
     if(senha !== (CONFIG.senhaLiberacao || DEMO_PASS)){ alert('Senha incorreta. Cancelamento não liberado.'); return false; }
-    cancelamentoLiberado = true; return true;
+    return true;
   }
   function registrarCancelamento(item, qtd){
     try{
