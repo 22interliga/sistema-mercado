@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Mercado — Sistema de Gestão</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0b0b0c">
+<meta name="theme-color" content="#1f6fd6">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/mercado-favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="icons/mercado-favicon-16.png">
 <link rel="apple-touch-icon" href="icons/mercado-apple-touch.png">
@@ -18,22 +18,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --black:#0b0b0c;
-    --charcoal:#1c1815;
-    --charcoal-2:#241f1b;
-    --gold:#c9a227;
-    --gold-bright:#e8c468;
-    --cream:#ede6d6;
-    --cream-dim:#a89f8d;
-    --ember:#7a2e2e;
-    --ember-bright:#a63f3f;
-    --ok:#4f8a5b;
-    --line: rgba(201,162,39,0.18);
+    --black:#ffffff;
+    --charcoal:#ffffff;
+    --charcoal-2:#eef2f7;
+    --gold:#1f6fd6;
+    --gold-bright:#3d8bf0;
+    --cream:#1a2433;
+    --cream-dim:#64748b;
+    --ember:#c0392b;
+    --ember-bright:#e04b3a;
+    --ok:#2e9e5b;
+    --line:#e2e8f0;
     --radius: 10px;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
-    background:var(--black);
+    background:var(--charcoal-2);
     color:var(--cream);
     font-family:'Inter', sans-serif;
     min-height:100vh;
@@ -67,9 +67,9 @@
   .brand-panel{
     position:relative;
     background:
-      radial-gradient(ellipse 60% 50% at 30% 100%, rgba(122,46,46,0.35), transparent 70%),
-      radial-gradient(ellipse 45% 40% at 75% 85%, rgba(201,162,39,0.12), transparent 70%),
-      var(--black);
+      radial-gradient(ellipse 60% 50% at 30% 100%, rgba(192,57,43,0.35), transparent 70%),
+      radial-gradient(ellipse 45% 40% at 75% 85%, rgba(31,111,214,0.12), transparent 70%),
+      #ffffff;
     display:flex;
     flex-direction:column;
     align-items:flex-start;
@@ -151,7 +151,7 @@
   }
   .role-pill:hover{ border-color:var(--gold); color:var(--cream); }
   .role-pill.active{
-    background: linear-gradient(155deg, var(--gold) 0%, #a9821e 100%);
+    background: linear-gradient(155deg, var(--gold) 0%, #1553a8 100%);
     color:var(--black); border-color:var(--gold); font-weight:600;
   }
 
@@ -167,17 +167,17 @@
 
   .btn-primary{
     width:100%; padding:13px; border:none; border-radius:var(--radius);
-    background: linear-gradient(155deg, var(--gold-bright) 0%, var(--gold) 55%, #a9821e 100%);
+    background: linear-gradient(155deg, var(--gold-bright) 0%, var(--gold) 55%, #1553a8 100%);
     color:var(--black); font-weight:700; font-size:14px; letter-spacing:0.02em;
     cursor:pointer; margin-top:8px;
     transition: transform .12s ease, box-shadow .12s ease;
   }
-  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(201,162,39,0.25); }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(31,111,214,0.25); }
   .btn-primary:active{ transform:translateY(0); }
 
   .error-msg{
-    display:none; background:rgba(122,46,46,0.2); border:1px solid var(--ember);
-    color:#e8b3b3; font-size:13px; padding:10px 12px; border-radius:var(--radius);
+    display:none; background:rgba(192,57,43,0.2); border:1px solid var(--ember);
+    color:#c0392b; font-size:13px; padding:10px 12px; border-radius:var(--radius);
     margin-bottom:16px;
   }
   .hint{ margin-top:20px; font-size:11.5px; color:var(--cream-dim); line-height:1.6; }
@@ -199,7 +199,7 @@
   .side-logo{ display:flex; align-items:center; gap:10px; padding:0 8px 22px; border-bottom:1px solid var(--line); margin-bottom:18px; }
   .side-logo .mark{
     width:34px; height:34px; border-radius:8px;
-    background:linear-gradient(155deg, var(--gold-bright), var(--gold) 60%, #8a6b18);
+    background:linear-gradient(155deg, var(--gold-bright), var(--gold) 60%, #123f80);
     display:flex; align-items:center; justify-content:center;
     font-family:'Fraunces',serif; font-weight:900; color:var(--black); font-size:16px;
     flex-shrink:0;
@@ -216,7 +216,7 @@
   }
   .nav-item svg{ width:17px; height:17px; flex-shrink:0; opacity:0.85; }
   .nav-item:hover{ background:var(--charcoal-2); color:var(--cream); }
-  .nav-item.active{ background: rgba(201,162,39,0.14); color:var(--gold-bright); }
+  .nav-item.active{ background: rgba(31,111,214,0.14); color:var(--gold-bright); }
   .nav-item.active svg{ opacity:1; }
   .nav-item.locked{ opacity:0.35; cursor:not-allowed; }
   .nav-item.locked:hover{ background:none; color:var(--cream-dim); }
@@ -237,7 +237,7 @@
     border:1px solid var(--line); border-radius:8px; color:var(--cream-dim);
     font-size:12px; cursor:pointer;
   }
-  .logout-btn:hover{ border-color:var(--ember-bright); color:#e8b3b3; }
+  .logout-btn:hover{ border-color:var(--ember-bright); color:#c0392b; }
 
   .main{ padding: 22px 28px 60px; max-width:1400px; }
   .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:26px; flex-wrap:wrap; gap:12px; }
@@ -343,7 +343,7 @@
     flex-shrink:0;
   }
   .icon-btn:hover{ color:var(--gold-bright); border-color:var(--gold); }
-  .icon-btn.danger:hover{ color:#e8b3b3; border-color:var(--ember-bright); }
+  .icon-btn.danger:hover{ color:#c0392b; border-color:var(--ember-bright); }
   .low-stock-tag{ font-size:10.5px; color:var(--ember-bright); border:1px solid var(--ember); border-radius:6px; padding:2px 6px; margin-left:6px; }
 
   .item-qty-ctrl{ display:flex; align-items:center; gap:6px; }
@@ -358,14 +358,14 @@
   .pdv-resultados{ position:absolute; z-index:40; left:0; right:0; top:100%; margin-top:4px; background:var(--charcoal-2); border:1px solid var(--line); border-radius:10px; max-height:300px; overflow:auto; box-shadow:0 10px 28px rgba(0,0,0,.45); }
   .pdv-res-item{ display:flex; align-items:center; gap:10px; padding:8px 10px; cursor:pointer; border-bottom:1px solid var(--line); font-size:14px; }
   .pdv-res-item:last-child{ border-bottom:none; }
-  .pdv-res-item:hover{ background:rgba(201,162,39,.12); }
+  .pdv-res-item:hover{ background:rgba(31,111,214,.12); }
   .pdv-res-img{ width:38px; height:38px; border-radius:8px; background:center/cover no-repeat; background-color:var(--charcoal); display:flex; align-items:center; justify-content:center; font-size:18px; flex:0 0 auto; }
   .pdv-preview{ display:flex; align-items:center; gap:12px; padding:10px; background:var(--charcoal-2); border:1px solid var(--line); border-radius:10px; margin-bottom:12px; flex-wrap:wrap; }
   .pdv-preview-img{ width:54px; height:54px; border-radius:10px; background:center/cover no-repeat; background-color:var(--charcoal); display:flex; align-items:center; justify-content:center; font-size:24px; flex:0 0 auto; }
   .item-thumb{ width:34px; height:34px; border-radius:7px; background:center/cover no-repeat; background-color:var(--charcoal); display:flex; align-items:center; justify-content:center; font-size:16px; flex:0 0 auto; margin-right:8px; }
   .caixa-topbar{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
   .caixa-status{ font-weight:700; letter-spacing:.08em; font-size:13px; padding:6px 14px; border-radius:999px; background:var(--charcoal-2); border:1px solid var(--line); color:var(--cream-dim); }
-  .caixa-status.ativo{ background:linear-gradient(155deg,var(--gold) 0%,#a9821e 100%); color:var(--black); border-color:var(--gold); }
+  .caixa-status.ativo{ background:linear-gradient(155deg,var(--gold) 0%,#1553a8 100%); color:var(--black); border-color:var(--gold); }
   .caixa-top-meta{ color:var(--cream-dim); font-size:13px; flex:1; min-width:160px; }
   .caixa-scan{ position:relative; margin-bottom:12px; }
   .caixa-scan input{ width:100%; padding:16px 18px; font-size:18px; background:var(--charcoal-2); border:2px solid var(--gold); border-radius:12px; color:var(--cream); }
@@ -381,7 +381,7 @@
   .caixa-cupom{ display:flex; flex-direction:column; background:var(--charcoal-2); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
   .caixa-cupom-head{ display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--line); font-weight:700; letter-spacing:.06em; color:var(--gold-bright); }
   .caixa-cupom-lista{ max-height:300px; overflow:auto; padding:6px 8px; }
-  .cupom-row{ display:flex; align-items:center; gap:10px; padding:8px; border-bottom:1px solid rgba(201,162,39,.08); }
+  .cupom-row{ display:flex; align-items:center; gap:10px; padding:8px; border-bottom:1px solid rgba(31,111,214,.08); }
   .cupom-row:last-child{ border-bottom:none; }
   .cupom-qtd{ min-width:40px; font-size:16px; color:var(--gold-bright); }
   .cupom-desc{ flex:1; min-width:0; }
@@ -390,7 +390,7 @@
   .cupom-total{ font-size:16px; min-width:78px; text-align:right; }
   .cupom-acoes{ display:flex; gap:4px; }
   .cupom-acoes button{ width:30px; height:30px; border-radius:7px; border:1px solid var(--line); background:var(--charcoal); color:var(--cream); font-size:16px; cursor:pointer; line-height:1; }
-  .cupom-acoes button.danger{ border-color:var(--ember); color:#e8b3b3; }
+  .cupom-acoes button.danger{ border-color:var(--ember); color:#c0392b; }
   .caixa-cupom-rodape{ padding:12px 16px; border-top:1px solid var(--line); }
   .caixa-linha-min{ display:flex; justify-content:space-between; align-items:center; font-size:14px; color:var(--cream-dim); margin-bottom:8px; }
   .caixa-desc-input{ width:110px; padding:6px 10px; background:var(--charcoal); border:1px solid var(--line); border-radius:8px; color:var(--cream); text-align:right; }
@@ -399,9 +399,9 @@
   .caixa-total-box span:last-child{ font-size:38px; font-weight:800; color:var(--gold-bright); line-height:1; }
   .caixa-finalizar{ font-size:20px; padding:16px; font-weight:700; letter-spacing:.03em; }
   @media(max-width:520px){ .caixa-atual{ flex-direction:column; } .caixa-atual-img{ width:100%; height:130px; } .caixa-total-box span:last-child{ font-size:30px; } }
-  .btn-estorno{ margin-left:8px; padding:4px 10px; font-size:11px; border-radius:7px; border:1px solid var(--ember); background:transparent; color:#e8b3b3; cursor:pointer; white-space:nowrap; }
-  .btn-estorno:hover{ background:rgba(122,46,46,.2); }
-  .tag-cancelada{ margin-left:8px; padding:3px 9px; font-size:10px; font-weight:700; letter-spacing:.05em; border-radius:6px; background:rgba(122,46,46,.25); color:#e8b3b3; white-space:nowrap; }
+  .btn-estorno{ margin-left:8px; padding:4px 10px; font-size:11px; border-radius:7px; border:1px solid var(--ember); background:transparent; color:#c0392b; cursor:pointer; white-space:nowrap; }
+  .btn-estorno:hover{ background:rgba(192,57,43,.2); }
+  .tag-cancelada{ margin-left:8px; padding:3px 9px; font-size:10px; font-weight:700; letter-spacing:.05em; border-radius:6px; background:rgba(192,57,43,.25); color:#c0392b; white-space:nowrap; }
   #app-screen.modo-caixa{ grid-template-columns: 1fr; }
   .modo-caixa .sidebar{ display:none; }
   .modo-caixa .menu-toggle{ display:none !important; }
@@ -413,7 +413,7 @@
   .rec-fields{ display:grid; grid-template-columns:repeat(auto-fit, minmax(110px,1fr)); gap:10px; }
   .rec-fields .field{ margin-bottom:0; }
   .rec-fields input{ font-size:14px; }
-  .tag-novo{ margin-left:8px; padding:2px 8px; font-size:10px; font-weight:700; letter-spacing:.05em; border-radius:6px; background:rgba(201,162,39,.2); color:var(--gold-bright); }
+  .tag-novo{ margin-left:8px; padding:2px 8px; font-size:10px; font-weight:700; letter-spacing:.05em; border-radius:6px; background:rgba(31,111,214,.2); color:var(--gold-bright); }
 </style>
 </head>
 <body>
@@ -428,7 +428,7 @@
       <span class="num">GESTÃO · ESTOQUE · PDV</span>
     </div>
     <div class="cut-divider">
-      <svg viewBox="0 0 400 14" preserveAspectRatio="none"><path d="M0,7 L120,2 L160,12 L400,7" stroke="#c9a227" stroke-width="1" fill="none" opacity="0.5"/></svg>
+      <svg viewBox="0 0 400 14" preserveAspectRatio="none"><path d="M0,7 L120,2 L160,12 L400,7" stroke="#1f6fd6" stroke-width="1" fill="none" opacity="0.5"/></svg>
     </div>
     <p class="tagline">Venda ágil no balcão: escaneie o código de barras, receba e finalize — estoque, caixa e relatórios em um só sistema.</p>
   </div>
@@ -671,7 +671,7 @@
           <div class="caixa-top-meta">Venda <span class="mono" id="comandaCodigo">—</span> <span id="comandaNomeCliente"></span> · aberta às <span id="comandaHorario">—</span></div>
           <div class="caixa-top-actions">
             <button class="btn-secondary" id="btnTrocarCliente" style="display:none;">Trocar cliente</button>
-            <button class="btn-secondary" id="btnCancelarComanda" style="border-color:var(--ember); color:#e8b3b3; display:none;">Cancelar pedido</button>
+            <button class="btn-secondary" id="btnCancelarComanda" style="border-color:var(--ember); color:#c0392b; display:none;">Cancelar pedido</button>
           </div>
         </div>
 
@@ -1041,8 +1041,8 @@
 </div>
 
 <!-- ===== TELA DE BLOQUEIO (exibida no lugar do sistema em caso de pendência) ===== -->
-<div id="blocked-screen" style="display:none; min-height:100vh; background:var(--black); align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:8vw;">
-  <div class="mark" style="width:64px; height:64px; border-radius:14px; background:linear-gradient(155deg, var(--gold-bright), var(--gold) 60%, #8a6b18); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:900; color:var(--black); font-size:26px; margin-bottom:24px;">071</div>
+<div id="blocked-screen" style="display:none; min-height:100vh; background:var(--charcoal-2); align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:8vw;">
+  <div class="mark" style="width:64px; height:64px; border-radius:14px; background:linear-gradient(155deg, var(--gold-bright), var(--gold) 60%, #123f80); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:900; color:var(--black); font-size:26px; margin-bottom:24px;">071</div>
   <h2 class="display" style="font-size:1.6rem; color:var(--cream); margin-bottom:10px;">Acesso temporariamente suspenso</h2>
   <p style="color:var(--cream-dim); max-width:420px; margin-bottom:6px;" id="blockedMotivo">Sistema com pendência. Entre em contato com o suporte para regularizar o acesso.</p>
   <p class="mono" style="color:var(--gold-bright); font-size:1.1rem; margin-top:18px;" id="blockedTelefone">—</p>
@@ -1051,7 +1051,7 @@
 </div>
 
 <!-- ===== PAINEL DE SUPORTE (acesso restrito ao desenvolvedor — não aparece em nenhum menu) ===== -->
-<div id="support-screen" style="display:none; min-height:100vh; background:var(--black); padding:6vw; justify-content:center;">
+<div id="support-screen" style="display:none; min-height:100vh; background:var(--charcoal-2); padding:6vw; justify-content:center;">
   <div style="max-width:520px; margin:0 auto; width:100%;">
     <div class="eyebrow" style="color:var(--gold); font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.15em; margin-bottom:10px;">PAINEL DO DESENVOLVEDOR</div>
     <h2 class="display" style="color:var(--cream); font-size:1.6rem; margin-bottom:20px;">Licença — Mercado</h2>
@@ -1300,7 +1300,7 @@
     if(role !== 'Administrador' || !situacao || situacao.diasRestantes === undefined) return;
     if(situacao.diasRestantes > 3) return;
     const banner = document.createElement('div');
-    banner.style.cssText = 'background:rgba(122,46,46,0.18); border:1px solid var(--ember); color:#e8b3b3; padding:10px 16px; border-radius:8px; font-size:13px; margin-bottom:16px;';
+    banner.style.cssText = 'background:rgba(192,57,43,0.18); border:1px solid var(--ember); color:#c0392b; padding:10px 16px; border-radius:8px; font-size:13px; margin-bottom:16px;';
     const dataFmt = new Date(situacao.dataVencimento+'T00:00:00').toLocaleDateString('pt-BR');
     banner.textContent = situacao.diasRestantes >= 0
       ? `⚠️ Mensalidade vence em ${situacao.diasRestantes} dia(s) (${dataFmt}). Regularize para evitar suspensão do acesso.`
@@ -2070,7 +2070,7 @@
         .codigo{ font-size:16px; font-weight:bold; letter-spacing:1px; margin-top:4px; }
         p{ font-size:11px; margin:2px 0; }
         #btnImprimirManual{ margin-top:14px; padding:10px 18px; font-size:14px; cursor:pointer; }
-        #avisoErro{ display:none; color:#b00; font-size:11px; margin-top:6px; }
+        #avisoErro{ display:none; color:#c0392b; font-size:11px; margin-top:6px; }
         @media print{ #btnImprimirManual, #avisoErro{ display:none !important; } }
       </style></head>
       <body>
@@ -3194,7 +3194,7 @@
     ctx.clearRect(0,0,w,h);
 
     // gridlines
-    ctx.strokeStyle = 'rgba(201,162,39,0.12)';
+    ctx.strokeStyle = 'rgba(31,111,214,0.12)';
     ctx.lineWidth = 1;
     for(let i=0;i<=3;i++){
       const y = padT + (h-padT-padB) * (i/3);
@@ -3208,15 +3208,15 @@
       const grad = ctx.createLinearGradient(0,y,0,y+barH);
       const isToday = i === values.length-1;
       if(isToday){
-        grad.addColorStop(0, '#e8c468'); grad.addColorStop(1, '#7a2e2e');
+        grad.addColorStop(0, '#4d95f0'); grad.addColorStop(1, '#c0392b');
       } else {
-        grad.addColorStop(0, '#c9a227'); grad.addColorStop(1, '#5c4813');
+        grad.addColorStop(0, '#1f6fd6'); grad.addColorStop(1, '#0e3266');
       }
       ctx.fillStyle = grad;
       roundRect(ctx, x, y, barW, barH, 4);
       ctx.fill();
 
-      ctx.fillStyle = '#a89f8d';
+      ctx.fillStyle = '#64748b';
       ctx.font = '11px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(labels[i], x+barW/2, h-8);
