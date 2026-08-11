@@ -399,6 +399,9 @@
   .caixa-total-box span:last-child{ font-size:38px; font-weight:800; color:var(--gold-bright); line-height:1; }
   .caixa-finalizar{ font-size:20px; padding:16px; font-weight:700; letter-spacing:.03em; }
   @media(max-width:520px){ .caixa-atual{ flex-direction:column; } .caixa-atual-img{ width:100%; height:130px; } .caixa-total-box span:last-child{ font-size:30px; } }
+  .btn-estorno{ margin-left:8px; padding:4px 10px; font-size:11px; border-radius:7px; border:1px solid var(--ember); background:transparent; color:#e8b3b3; cursor:pointer; white-space:nowrap; }
+  .btn-estorno:hover{ background:rgba(122,46,46,.2); }
+  .tag-cancelada{ margin-left:8px; padding:3px 9px; font-size:10px; font-weight:700; letter-spacing:.05em; border-radius:6px; background:rgba(122,46,46,.25); color:#e8b3b3; white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -1635,7 +1638,7 @@
     try{
       const inicioMes = new Date(); inicioMes.setDate(1); inicioMes.setHours(0,0,0,0);
       const snap = await colVendas.where('codigoCliente','==',codigo).where('criadoEm','>=', inicioMes).get();
-      const totalMes = snap.docs.reduce((s,d)=> s + (d.data().total||0), 0);
+      const totalMes = snap.docs.map(d=>d.data()).filter(v=>v.status!=='cancelada').reduce((s,v)=> s + (v.total||0), 0);
       if(totalMes >= CONFIG.fidelidadeValorMinimo){
         document.getElementById('fidelidadeTexto').textContent =
           `Esse cliente já comprou ${fmtMoeda(totalMes)} este mês (mínimo: ${fmtMoeda(CONFIG.fidelidadeValorMinimo)}) — direito a ${CONFIG.fidelidadePercentual}% de desconto nesta compra.`;
@@ -2247,6 +2250,7 @@
       const porPagamento = {PIX:0, Dinheiro:0, 'Crédito':0, 'Débito':0, 'A Receber':0};
       vendasSnap.docs.forEach(d=>{
         const v = d.data();
+        if(v.status==='cancelada') return;
         if(porPagamento[v.pagamento]!==undefined) porPagamento[v.pagamento] += v.total||0;
       });
       document.getElementById('caixaPix').textContent = fmtMoeda(porPagamento.PIX);
@@ -2290,13 +2294,51 @@
           .map(v=>{
             const hora = v.criadoEm && v.criadoEm.toDate ? v.criadoEm.toDate().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '—';
             const itensTxt = (v.itens||[]).map(i=> `${i.qtd}x ${i.nome}`).join(', ');
-            return `<div class="stock-row"><div class="stock-dot" style="background:var(--gold)"></div>
-              <div class="stock-name">${hora} — ${v.nomeCliente ? v.nomeCliente + ' (' + v.codigoCliente + ')' : 'cliente ' + (v.codigoCliente||'—')} · ${itensTxt} <span style="color:var(--cream-dim); font-size:11px;">(${v.pagamento})</span></div>
-              <div class="stock-qty mono" style="color:var(--gold-bright)">${fmtMoeda(v.total)}</div></div>`;
+            const cancelada = v.status === 'cancelada';
+            const nomeTxt = v.nomeCliente ? v.nomeCliente + ' (' + v.codigoCliente + ')' : 'cliente ' + (v.codigoCliente||'—');
+            const acao = cancelada ? `<span class="tag-cancelada">CANCELADA</span>` : `<button class="btn-estorno" onclick="cancelarVendaFinalizada('${v.id}')">Estornar</button>`;
+            return `<div class="stock-row"${cancelada?' style="opacity:.55"':''}><div class="stock-dot" style="background:${cancelada?'var(--ember-bright)':'var(--gold)'}"></div>
+              <div class="stock-name">${hora} — ${nomeTxt} · ${itensTxt} <span style="color:var(--cream-dim); font-size:11px;">(${v.pagamento})</span></div>
+              <div class="stock-qty mono" style="color:${cancelada?'var(--ember-bright)':'var(--gold-bright)'};${cancelada?'text-decoration:line-through;':''}">${fmtMoeda(v.total)}</div>
+              ${acao}</div>`;
           }).join('');
       }
     } catch(err){ console.error('Erro ao calcular totais do caixa:', err); }
   }
+
+  window.cancelarVendaFinalizada = async function(vendaId){
+    const senha = prompt('Senha de gerente para ESTORNAR esta venda finalizada:');
+    if(senha === null) return;
+    if(senha !== (CONFIG.senhaLiberacao || DEMO_PASS)){ alert('Senha incorreta. Estorno não autorizado.'); return; }
+    try{
+      const doc = await colVendas.doc(vendaId).get();
+      if(!doc.exists){ alert('Venda não encontrada.'); return; }
+      const v = doc.data();
+      if(v.status === 'cancelada'){ alert('Esta venda já está cancelada.'); return; }
+      if(!confirm(`Estornar a venda de ${fmtMoeda(v.total)}?\nO estoque dos itens volta e a venda sai do faturamento.`)) return;
+      const motivo = prompt('Motivo do estorno (opcional):') || '';
+      const batch = db.batch();
+      (v.itens||[]).forEach(i=>{
+        const prod = PRODUTOS.find(x=>x.id===i.produtoId);
+        if(prod){
+          batch.update(colProdutos.doc(i.produtoId), { estoque: (prod.estoque||0) + (i.qtd||0) });
+          batch.set(colMovEstoque.doc(), { produtoId:i.produtoId, nomeProduto:i.nome, tipo:'estorno_venda', quantidade:i.qtd, vendaId, criadoEm: firebase.firestore.FieldValue.serverTimestamp(), criadoPor: currentUserDisplay || '—' });
+        }
+      });
+      batch.update(colVendas.doc(vendaId), {
+        status:'cancelada',
+        canceladaEm: firebase.firestore.FieldValue.serverTimestamp(),
+        canceladoPor: currentUserDisplay || '—',
+        motivoCancelamento: motivo || null,
+        statusRecebimento: v.pagamento === 'A Receber' ? 'cancelado' : (v.statusRecebimento || null)
+      });
+      await batch.commit();
+      try{ db.collection(PREFIX+'cancelamentos').add({ tipo:'venda_finalizada', vendaId, total:v.total, motivo:motivo||null, operador: currentUserDisplay||'—', criadoEm: firebase.firestore.FieldValue.serverTimestamp() }); }catch(e){}
+      alert('Venda estornada. Estoque devolvido.');
+      refreshCaixaTotais();
+      if(typeof refreshDashboard === 'function') refreshDashboard();
+    } catch(err){ alert('Erro ao estornar venda: ' + err.message); }
+  };
 
   // =========================================================
   // ======================  ESTOQUE  =========================
@@ -2559,7 +2601,7 @@
     const box = document.getElementById('listaContasReceber');
     try{
       const snap = await colVendas.where('pagamento','==','A Receber').get();
-      const contas = snap.docs.map(d=>({id:d.id, ...d.data()}));
+      const contas = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(v=> v.status!=='cancelada');
       contas.sort((a,b)=>{
         // pendentes primeiro, depois por data de vencimento mais próxima
         if(a.statusRecebimento !== b.statusRecebimento) return a.statusRecebimento === 'pendente' ? -1 : 1;
@@ -2680,7 +2722,7 @@
     Promise.all(filtrados.map(async c=>{
       if(!c.codigo) return { ...c, totalGasto:0, frequencia:0, ultimaCompra:null };
       const snap = await colVendas.where('codigoCliente','==', c.codigo).get();
-      const vendas = snap.docs.map(d=>d.data());
+      const vendas = snap.docs.map(d=>d.data()).filter(v=>v.status!=='cancelada');
       const totalGasto = vendas.reduce((s,v)=> s + (v.total||0), 0);
       const datas = vendas.map(v=> v.criadoEm && v.criadoEm.toDate ? v.criadoEm.toDate() : null).filter(Boolean);
       const ultimaCompra = datas.length ? new Date(Math.max(...datas)) : null;
@@ -2731,7 +2773,7 @@
         colVendas.where('criadoEm','>=', inicio).where('criadoEm','<=', fim).get(),
         colMovimentos.where('criadoEm','>=', inicio).where('criadoEm','<=', fim).get()
       ]);
-      const vendas = vendasSnap.docs.map(d=>d.data());
+      const vendas = vendasSnap.docs.map(d=>d.data()).filter(v=> v.status!=='cancelada');
       const movimentos = movSnap.docs.map(d=>d.data());
 
       const faturamento = vendas.reduce((s,v)=> s+(v.total||0), 0);
@@ -2900,7 +2942,7 @@
     try{
       const inicioHoje = new Date(); inicioHoje.setHours(0,0,0,0);
       const snap = await colVendas.where('criadoEm','>=', inicioHoje).get();
-      const vendasHoje = snap.docs.map(d=>d.data());
+      const vendasHoje = snap.docs.map(d=>d.data()).filter(v=> v.status!=='cancelada');
 
       document.getElementById('kpiVendasHoje').textContent = vendasHoje.length;
       const faturamento = vendasHoje.reduce((s,v)=> s + (v.total||0), 0);
@@ -2951,6 +2993,7 @@
       }
       snap.docs.forEach(doc=>{
         const v = doc.data();
+        if(v.status==='cancelada') return;
         if(!v.criadoEm || !v.criadoEm.toDate) return;
         const key = v.criadoEm.toDate().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
         if(porDia[key] !== undefined) porDia[key] += (v.total||0);
